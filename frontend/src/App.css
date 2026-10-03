@@ -1946,3 +1946,190 @@
 .full-width {
   width: 100%;
 }
+
+/* ==========================================================================
+   Event Registration & Payment Flow Modal Styles
+   ========================================================================== */
+.reg-flow-modal-content {
+  padding: 0.5rem 0;
+}
+
+.reg-flow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  gap: 0.5rem;
+}
+
+.flow-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.55;
+  transition: all var(--transition-fast);
+}
+
+.flow-step-item.active {
+  opacity: 1;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.flow-step-item.done {
+  opacity: 0.9;
+  color: var(--success);
+}
+
+.flow-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.flow-step-item.active .flow-step-num {
+  background-color: var(--primary);
+  color: white;
+}
+
+.flow-step-item.done .flow-step-num {
+  background-color: var(--success);
+  color: white;
+}
+
+.flow-step-title {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.flow-event-highlight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary-light);
+  border: 1px solid var(--primary-border);
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.flow-event-highlight h4 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.flow-event-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.flow-event-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.payment-method-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.payment-method-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.5rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.payment-method-btn:hover {
+  border-color: var(--primary-border);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.payment-method-btn.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.payment-form-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.receipt-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  margin: 1.25rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed #f1f5f9;
+  font-size: 0.88rem;
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+}
+
+.receipt-row span:first-child {
+  color: var(--text-muted);
+}
+
+.receipt-row span:last-child {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+@media (max-width: 600px) {
+  .reg-flow-steps {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .payment-method-selector {
+    grid-template-columns: 1fr;
+  }
+}

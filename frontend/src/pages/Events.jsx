@@ -7,7 +7,7 @@ import EventList from '../components/EventList';
 import SearchBar from '../components/SearchBar';
 import Filter from '../components/Filter';
 import LoadingSpinner from '../components/LoadingSpinner';
-import Modal from '../components/Modal';
+import RegistrationFlowModal from '../components/RegistrationFlowModal';
 import { Calendar, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 
 const Events = () => {
@@ -29,7 +29,6 @@ const Events = () => {
 
   // Modal & Notification states
   const [modalEvent, setModalEvent] = useState(null);
-  const [isRegistering, setIsRegistering] = useState(false);
   const [alert, setAlert] = useState(null);
 
   const fetchEvents = async () => {
@@ -116,27 +115,6 @@ const Events = () => {
     setModalEvent(event);
   };
 
-  const confirmRegistration = async () => {
-    if (!modalEvent || !currentUser?.id) return;
-    setIsRegistering(true);
-    try {
-      await registrationService.registerForEvent(currentUser.id, modalEvent.id);
-      setAlert({
-        type: 'success',
-        message: `Successfully registered for "${modalEvent.eventName}"!`,
-      });
-      setRegisteredEventIds((prev) => [...prev, modalEvent.id]);
-      setModalEvent(null);
-      // Refresh event capacity
-      fetchEvents();
-    } catch (err) {
-      setAlert({ type: 'danger', message: err.message });
-      setModalEvent(null);
-    } finally {
-      setIsRegistering(false);
-    }
-  };
-
   return (
     <div className="events-page container">
       {/* Header */}
@@ -209,61 +187,19 @@ const Events = () => {
         />
       )}
 
-      {/* Registration Confirmation Modal */}
-      <Modal
+      {/* Multi-Step Participant Details & Demo Payment Registration Modal */}
+      <RegistrationFlowModal
         isOpen={!!modalEvent}
         onClose={() => setModalEvent(null)}
-        title="Confirm Event Registration"
-        footer={
-          <>
-            <button
-              onClick={() => setModalEvent(null)}
-              className="btn btn-secondary"
-              disabled={isRegistering}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={confirmRegistration}
-              className="btn btn-primary"
-              disabled={isRegistering}
-            >
-              {isRegistering ? 'Registering...' : 'Confirm Registration'}
-            </button>
-          </>
-        }
-      >
-        {modalEvent && (
-          <div className="registration-modal-content">
-            <p className="modal-intro">
-              You are about to register for the following campus event:
-            </p>
-            <div className="modal-event-summary">
-              <h4>{modalEvent.eventName}</h4>
-              <p>
-                <strong>Category:</strong> {modalEvent.category}
-              </p>
-              <p>
-                <strong>Date & Time:</strong> {modalEvent.eventDate} ({modalEvent.startTime})
-              </p>
-              <p>
-                <strong>Venue:</strong> {modalEvent.venue}
-              </p>
-              <p>
-                <strong>Organizer:</strong> {modalEvent.organizerName}
-              </p>
-              <p>
-                <strong>Available Slots:</strong> {modalEvent.availableSeats} of{' '}
-                {modalEvent.maxParticipants}
-              </p>
-            </div>
-            <p className="modal-note text-muted">
-              Note: Duplicate registrations for the same event are prevented. You can cancel your
-              registration at any time from your Student Dashboard.
-            </p>
-          </div>
-        )}
-      </Modal>
+        event={modalEvent}
+        currentUser={currentUser}
+        onSuccess={(result) => {
+          if (modalEvent) {
+            setRegisteredEventIds((prev) => [...prev, modalEvent.id]);
+          }
+          fetchEvents();
+        }}
+      />
     </div>
   );
 };

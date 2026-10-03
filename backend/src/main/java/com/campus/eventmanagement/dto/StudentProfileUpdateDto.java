@@ -20,6 +20,8 @@ public class StudentProfileUpdateDto {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be a valid 10-digit number")
     private String phoneNumber;
 
+    private String collegeName;
+
     // Optional: Only updated if non-empty
     private String password;
 
@@ -55,6 +57,14 @@ public class StudentProfileUpdateDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 
     public String getPassword() {

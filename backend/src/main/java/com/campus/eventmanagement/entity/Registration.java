@@ -27,6 +27,33 @@ public class Registration {
     @Column(nullable = false)
     private String status = "REGISTERED"; // REGISTERED, CANCELLED, ATTENDED
 
+    @Column(nullable = true)
+    private String fullName;
+
+    @Column(nullable = true)
+    private String email;
+
+    @Column(nullable = true)
+    private String phoneNumber;
+
+    @Column(nullable = true)
+    private String department;
+
+    @Column(nullable = true)
+    private String year;
+
+    @Column(nullable = true)
+    private String collegeName;
+
+    @Column(nullable = true)
+    private String rollNumber;
+
+    @Column(nullable = true)
+    private String paymentStatus; // NOT_REQUIRED, PENDING, PAID
+
+    @Column(nullable = true)
+    private String paymentReference;
+
     public Registration() {
     }
 
@@ -35,6 +62,25 @@ public class Registration {
         this.event = event;
         this.registrationDate = registrationDate;
         this.status = status;
+    }
+
+    public Registration(Student student, Event event, LocalDateTime registrationDate, String status,
+                        String fullName, String email, String phoneNumber, String department,
+                        String year, String collegeName, String rollNumber, String paymentStatus,
+                        String paymentReference) {
+        this.student = student;
+        this.event = event;
+        this.registrationDate = registrationDate;
+        this.status = status;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.department = department;
+        this.year = year;
+        this.collegeName = collegeName;
+        this.rollNumber = rollNumber;
+        this.paymentStatus = paymentStatus;
+        this.paymentReference = paymentReference;
     }
 
     public Long getId() {
@@ -75,5 +121,77 @@ public class Registration {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentReference() {
+        return paymentReference;
+    }
+
+    public void setPaymentReference(String paymentReference) {
+        this.paymentReference = paymentReference;
     }
 }

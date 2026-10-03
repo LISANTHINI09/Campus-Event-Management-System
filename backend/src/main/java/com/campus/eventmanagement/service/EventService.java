@@ -9,6 +9,7 @@ import com.campus.eventmanagement.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public class EventService {
         event.setCurrentRegisteredCount(0);
         event.setRegistrationDeadline(dto.getRegistrationDeadline());
         event.setStatus(dto.getStatus() != null && !dto.getStatus().isEmpty() ? dto.getStatus() : "UPCOMING");
+        event.setRegistrationFee(dto.getRegistrationFee() != null ? dto.getRegistrationFee() : BigDecimal.ZERO);
         event.setCreatedDate(LocalDate.now());
 
         Event saved = eventRepository.save(event);
@@ -82,6 +84,9 @@ public class EventService {
         event.setOrganizerName(dto.getOrganizerName().trim());
         event.setMaxParticipants(dto.getMaxParticipants());
         event.setRegistrationDeadline(dto.getRegistrationDeadline());
+        if (dto.getRegistrationFee() != null) {
+            event.setRegistrationFee(dto.getRegistrationFee());
+        }
 
         if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
             event.setStatus(dto.getStatus());
@@ -126,6 +131,7 @@ public class EventService {
         dto.setRegistrationDeadline(event.getRegistrationDeadline());
         dto.setStatus(event.getStatus());
         dto.setCreatedDate(event.getCreatedDate());
+        dto.setRegistrationFee(event.getRegistrationFee() != null ? event.getRegistrationFee() : BigDecimal.ZERO);
 
         boolean closed = LocalDate.now().isAfter(event.getRegistrationDeadline())
                 || event.getCurrentRegisteredCount() >= event.getMaxParticipants()

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { studentService } from '../services/studentService';
-import { useAuth } from '../context/AuthContext';
-import { UserPlus, Mail, Key, User, Phone, BookOpen, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Mail, Key, User, Phone, Building, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const DEPARTMENTS = ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL', 'AI & DS', 'Other'];
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
@@ -11,9 +10,10 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phoneNumber: '',
     department: 'CSE',
     year: '1st Year',
-    phoneNumber: '',
+    collegeName: '',
     password: '',
     confirmPassword: '',
   });
@@ -24,7 +24,6 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +38,8 @@ const Register = () => {
 
     if (!formData.name.trim()) {
       newErrors.name = 'Full name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Full name must be at least 2 characters';
     }
 
     if (!formData.email.trim()) {
@@ -50,7 +51,19 @@ const Register = () => {
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = 'Phone number is required';
     } else if (!/^[0-9]{10}$/.test(formData.phoneNumber.trim())) {
-      newErrors.phoneNumber = 'Phone number must be exactly 10 digits';
+      newErrors.phoneNumber = 'Phone number must be a valid 10-digit number';
+    }
+
+    if (!formData.department) {
+      newErrors.department = 'Department is required';
+    }
+
+    if (!formData.year) {
+      newErrors.year = 'Academic year is required';
+    }
+
+    if (!formData.collegeName.trim()) {
+      newErrors.collegeName = 'College name is required';
     }
 
     if (!formData.password) {
@@ -59,7 +72,9 @@ const Register = () => {
       newErrors.password = 'Password must be at least 6 characters long';
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Confirm password is required';
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
@@ -78,22 +93,20 @@ const Register = () => {
       await studentService.register({
         name: formData.name.trim(),
         email: formData.email.trim().toLowerCase(),
+        phoneNumber: formData.phoneNumber.trim(),
         department: formData.department,
         year: formData.year,
-        phoneNumber: formData.phoneNumber.trim(),
+        collegeName: formData.collegeName.trim(),
         password: formData.password,
       });
 
-      setSuccessMessage('Registration successful! Logging you in...');
-      // Automatically log the new student in
-      setTimeout(async () => {
-        try {
-          await login(formData.email.trim().toLowerCase(), formData.password);
-          navigate('/student/dashboard');
-        } catch (err) {
-          navigate('/login');
-        }
-      }, 1000);
+      setSuccessMessage('Registration successful! Redirecting to login...');
+      // Flow: Create Account -> Login -> Browse Events
+      setTimeout(() => {
+        navigate('/login', {
+          state: { successMessage: 'Account created successfully! Please sign in with your credentials.' },
+        });
+      }, 1200);
     } catch (err) {
       setServerError(err.message || 'Registration failed. Please check your details.');
     } finally {
@@ -127,16 +140,18 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {/* Full Name */}
+          {/* 1. Full Name */}
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label className="form-label">
+              Full Name <span className="required-star">*</span>
+            </label>
             <div className="input-with-icon">
               <User size={18} className="input-icon" />
               <input
                 type="text"
                 name="name"
                 className="form-control"
-                placeholder="e.g. John Doe"
+                placeholder="e.g. Rahul Sharma"
                 value={formData.name}
                 onChange={handleChange}
               />
@@ -144,16 +159,18 @@ const Register = () => {
             {errors.name && <p className="form-error">{errors.name}</p>}
           </div>
 
-          {/* Email */}
+          {/* 2. Email */}
           <div className="form-group">
-            <label className="form-label">College Email Address</label>
+            <label className="form-label">
+              College Email Address <span className="required-star">*</span>
+            </label>
             <div className="input-with-icon">
               <Mail size={18} className="input-icon" />
               <input
                 type="email"
                 name="email"
                 className="form-control"
-                placeholder="e.g. john.doe@campus.edu"
+                placeholder="e.g. rahul.sharma@campus.edu"
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -161,44 +178,11 @@ const Register = () => {
             {errors.email && <p className="form-error">{errors.email}</p>}
           </div>
 
-          {/* Department & Year Grid */}
-          <div className="form-row-2">
-            <div className="form-group">
-              <label className="form-label">Department</label>
-              <select
-                name="department"
-                className="form-control"
-                value={formData.department}
-                onChange={handleChange}
-              >
-                {DEPARTMENTS.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Academic Year</label>
-              <select
-                name="year"
-                className="form-control"
-                value={formData.year}
-                onChange={handleChange}
-              >
-                {YEARS.map((yr) => (
-                  <option key={yr} value={yr}>
-                    {yr}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Phone Number */}
+          {/* 3. Phone Number */}
           <div className="form-group">
-            <label className="form-label">Phone Number (10 digits)</label>
+            <label className="form-label">
+              Phone Number (10 digits) <span className="required-star">*</span>
+            </label>
             <div className="input-with-icon">
               <Phone size={18} className="input-icon" />
               <input
@@ -214,10 +198,72 @@ const Register = () => {
             {errors.phoneNumber && <p className="form-error">{errors.phoneNumber}</p>}
           </div>
 
-          {/* Password & Confirm Password */}
+          {/* 4 & 5. Department & Year Grid */}
           <div className="form-row-2">
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <label className="form-label">
+                Department <span className="required-star">*</span>
+              </label>
+              <select
+                name="department"
+                className="form-control"
+                value={formData.department}
+                onChange={handleChange}
+              >
+                {DEPARTMENTS.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+              {errors.department && <p className="form-error">{errors.department}</p>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                Academic Year <span className="required-star">*</span>
+              </label>
+              <select
+                name="year"
+                className="form-control"
+                value={formData.year}
+                onChange={handleChange}
+              >
+                {YEARS.map((yr) => (
+                  <option key={yr} value={yr}>
+                    {yr}
+                  </option>
+                ))}
+              </select>
+              {errors.year && <p className="form-error">{errors.year}</p>}
+            </div>
+          </div>
+
+          {/* 6. College Name */}
+          <div className="form-group">
+            <label className="form-label">
+              College Name <span className="required-star">*</span>
+            </label>
+            <div className="input-with-icon">
+              <Building size={18} className="input-icon" />
+              <input
+                type="text"
+                name="collegeName"
+                className="form-control"
+                placeholder="e.g. Campus Institute of Technology"
+                value={formData.collegeName}
+                onChange={handleChange}
+              />
+            </div>
+            {errors.collegeName && <p className="form-error">{errors.collegeName}</p>}
+          </div>
+
+          {/* 7 & 8. Password & Confirm Password */}
+          <div className="form-row-2">
+            <div className="form-group">
+              <label className="form-label">
+                Password <span className="required-star">*</span>
+              </label>
               <div className="input-with-icon">
                 <Key size={18} className="input-icon" />
                 <input
@@ -233,7 +279,9 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Confirm Password</label>
+              <label className="form-label">
+                Confirm Password <span className="required-star">*</span>
+              </label>
               <div className="input-with-icon">
                 <Key size={18} className="input-icon" />
                 <input

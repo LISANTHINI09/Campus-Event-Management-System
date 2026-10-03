@@ -110,11 +110,11 @@ const MyRegistrations = () => {
                 <thead>
                   <tr>
                     <th>Event Details</th>
-                    <th>Category</th>
                     <th>Date & Time</th>
                     <th>Venue</th>
-                    <th>Registered On</th>
-                    <th>Status</th>
+                    <th>Participant Name</th>
+                    <th>Registration Status</th>
+                    <th>Payment Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -125,9 +125,11 @@ const MyRegistrations = () => {
                         <Link to={`/events/${reg.eventId}`} className="table-event-name-link">
                           <strong>{reg.eventName}</strong>
                         </Link>
-                      </td>
-                      <td>
-                        <span className="badge badge-category">{reg.eventCategory}</span>
+                        <div>
+                          <span className="badge badge-category" style={{ fontSize: '0.75rem', marginTop: '2px' }}>
+                            {reg.eventCategory}
+                          </span>
+                        </div>
                       </td>
                       <td>
                         <div style={{ fontSize: '0.88rem' }}>
@@ -143,11 +145,17 @@ const MyRegistrations = () => {
                         </div>
                       </td>
                       <td>
-                        <span className="text-muted" style={{ fontSize: '0.85rem' }}>
-                          {reg.registrationDate
-                            ? new Date(reg.registrationDate).toLocaleDateString()
-                            : 'N/A'}
-                        </span>
+                        <strong>{reg.fullName || reg.studentName || currentUser?.name}</strong>
+                        {reg.rollNumber && (
+                          <div className="text-muted" style={{ fontSize: '0.8rem' }}>
+                            Roll: {reg.rollNumber}
+                          </div>
+                        )}
+                        {reg.department && (
+                          <div className="text-muted" style={{ fontSize: '0.78rem' }}>
+                            {reg.department} {reg.year ? `(${reg.year})` : ''}
+                          </div>
+                        )}
                       </td>
                       <td>
                         <span
@@ -161,6 +169,29 @@ const MyRegistrations = () => {
                         >
                           {reg.status}
                         </span>
+                      </td>
+                      <td>
+                        {reg.paymentStatus === 'PAID' ? (
+                          <div>
+                            <span className="badge" style={{ background: '#dcfce7', color: '#15803d', fontWeight: 600 }}>
+                              Paid
+                            </span>
+                            {reg.paymentReference && (
+                              <div style={{ fontSize: '0.78rem', fontFamily: 'monospace', color: '#4338ca', marginTop: '4px' }}>
+                                Ref: {reg.paymentReference}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div>
+                            <span className="badge" style={{ background: '#f1f5f9', color: '#475569', fontWeight: 500 }}>
+                              Not Required
+                            </span>
+                            <div className="text-muted" style={{ fontSize: '0.75rem', marginTop: '2px' }}>
+                              Free Event
+                            </div>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div className="table-action-btns">

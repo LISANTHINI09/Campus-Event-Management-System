@@ -184,6 +184,26 @@ input, select, textarea {
   border: 1px solid #a7f3d0;
 }
 
+.badge-paid {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #6ee7b7;
+  font-weight: 700;
+}
+
+.badge-free {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
+}
+
+.badge-outline {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
 /* Category Badges */
 .badge-category {
   background: var(--bg-subtle);

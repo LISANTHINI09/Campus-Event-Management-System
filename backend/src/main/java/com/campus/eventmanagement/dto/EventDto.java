@@ -1,8 +1,10 @@
 package com.campus.eventmanagement.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EventDto {
@@ -37,6 +39,9 @@ public class EventDto {
     private LocalDate registrationDeadline;
 
     private String status; // UPCOMING, ONGOING, COMPLETED, CANCELLED
+
+    @DecimalMin(value = "0.0", inclusive = true, message = "Registration fee cannot be negative")
+    private BigDecimal registrationFee;
 
     public EventDto() {}
 
@@ -126,5 +131,13 @@ public class EventDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BigDecimal getRegistrationFee() {
+        return registrationFee;
+    }
+
+    public void setRegistrationFee(BigDecimal registrationFee) {
+        this.registrationFee = registrationFee;
     }
 }

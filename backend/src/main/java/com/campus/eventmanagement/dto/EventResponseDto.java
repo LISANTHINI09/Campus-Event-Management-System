@@ -1,5 +1,6 @@
 package com.campus.eventmanagement.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EventResponseDto {
@@ -19,6 +20,7 @@ public class EventResponseDto {
     private String status;
     private LocalDate createdDate;
     private boolean isRegistrationClosed;
+    private BigDecimal registrationFee;
 
     public EventResponseDto() {}
 
@@ -148,5 +150,13 @@ public class EventResponseDto {
 
     public void setRegistrationClosed(boolean registrationClosed) {
         isRegistrationClosed = registrationClosed;
+    }
+
+    public BigDecimal getRegistrationFee() {
+        return registrationFee;
+    }
+
+    public void setRegistrationFee(BigDecimal registrationFee) {
+        this.registrationFee = registrationFee;
     }
 }

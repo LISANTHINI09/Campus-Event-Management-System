@@ -31,6 +31,9 @@ public class Student {
     @Column(nullable = false)
     private String role; // "STUDENT" or "ADMIN"
 
+    @Column(nullable = true)
+    private String collegeName;
+
     public Student() {
     }
 
@@ -42,6 +45,17 @@ public class Student {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.role = role;
+    }
+
+    public Student(String name, String email, String department, String year, String phoneNumber, String password, String role, String collegeName) {
+        this.name = name;
+        this.email = email;
+        this.department = department;
+        this.year = year;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.role = role;
+        this.collegeName = collegeName;
     }
 
     public Long getId() {
@@ -106,5 +120,13 @@ public class Student {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 }

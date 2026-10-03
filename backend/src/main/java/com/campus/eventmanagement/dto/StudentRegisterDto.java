@@ -25,6 +25,9 @@ public class StudentRegisterDto {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be a valid 10-digit number")
     private String phoneNumber;
 
+    @NotBlank(message = "College name is required")
+    private String collegeName;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
@@ -37,6 +40,16 @@ public class StudentRegisterDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFullName() {
+        return name;
+    }
+
+    public void setFullName(String fullName) {
+        if (this.name == null || this.name.isBlank()) {
+            this.name = fullName;
+        }
     }
 
     public String getEmail() {
@@ -69,6 +82,14 @@ public class StudentRegisterDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 
     public String getPassword() {

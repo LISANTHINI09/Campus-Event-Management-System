@@ -29,6 +29,7 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
     organizerName: '',
     maxParticipants: 50,
     registrationDeadline: '',
+    registrationFee: 0,
     status: 'UPCOMING',
   });
 
@@ -47,6 +48,7 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
         organizerName: initialData.organizerName || '',
         maxParticipants: initialData.maxParticipants || 50,
         registrationDeadline: initialData.registrationDeadline || '',
+        registrationFee: initialData.registrationFee !== undefined ? initialData.registrationFee : 0,
         status: initialData.status || 'UPCOMING',
       });
     }
@@ -56,7 +58,11 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'maxParticipants' ? parseInt(value, 10) || 0 : value,
+      [name]: name === 'maxParticipants' 
+        ? parseInt(value, 10) || 0 
+        : name === 'registrationFee'
+        ? (value === '' ? '' : Math.max(0, parseFloat(value) || 0))
+        : value,
     }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -98,6 +104,12 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
       newErrors.registrationDeadline = 'Registration deadline is required';
     } else if (formData.eventDate && formData.registrationDeadline > formData.eventDate) {
       newErrors.registrationDeadline = 'Deadline cannot be after the event date';
+    }
+
+    if (formData.registrationFee === '' || formData.registrationFee === null || formData.registrationFee === undefined) {
+      newErrors.registrationFee = 'Registration fee is required (enter 0 for free events)';
+    } else if (Number(formData.registrationFee) < 0) {
+      newErrors.registrationFee = 'Registration fee cannot be negative';
     }
 
     setErrors(newErrors);
@@ -265,8 +277,8 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
           {errors.organizerName && <p className="form-error">{errors.organizerName}</p>}
         </div>
 
-        {/* Maximum Participants */}
-        <div className="form-group col-span-2">
+        {/* Maximum Participants & Registration Fee */}
+        <div className="form-group">
           <label className="form-label">
             Maximum Capacity (Seat Limit) <span className="required-star">*</span>
           </label>
@@ -281,6 +293,28 @@ const EventForm = ({ initialData, onSubmit, isSubmitting, title = 'Event Informa
           />
           {errors.maxParticipants && (
             <p className="form-error">{errors.maxParticipants}</p>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            Registration Fee (₹) <span className="required-star">*</span>
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            name="registrationFee"
+            className="form-control"
+            placeholder="0 for Free, or fee in ₹"
+            value={formData.registrationFee}
+            onChange={handleChange}
+          />
+          <div style={{ marginTop: '5px', fontSize: '0.82rem', color: Number(formData.registrationFee) === 0 ? '#10b981' : '#6366f1', fontWeight: 500 }}>
+            {Number(formData.registrationFee) === 0 ? '🟢 Free Event (No payment required)' : `💳 Paid Event: ₹${formData.registrationFee}`}
+          </div>
+          {errors.registrationFee && (
+            <p className="form-error">{errors.registrationFee}</p>
           )}
         </div>
 

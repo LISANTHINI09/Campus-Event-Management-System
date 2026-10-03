@@ -1,8 +1,14 @@
 import api from './api';
 
 export const registrationService = {
-  registerForEvent: async (studentId, eventId) => {
-    const response = await api.post('/registrations', { studentId, eventId });
+  registerForEvent: async (dataOrStudentId, eventId) => {
+    let payload;
+    if (typeof dataOrStudentId === 'object' && dataOrStudentId !== null) {
+      payload = dataOrStudentId;
+    } else {
+      payload = { studentId: dataOrStudentId, eventId };
+    }
+    const response = await api.post('/registrations', payload);
     return response.data;
   },
 

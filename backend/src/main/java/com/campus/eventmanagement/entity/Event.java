@@ -1,6 +1,7 @@
 package com.campus.eventmanagement.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -46,6 +47,9 @@ public class Event {
     @Column(nullable = false)
     private String status = "UPCOMING"; // UPCOMING, ONGOING, COMPLETED, CANCELLED
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal registrationFee = BigDecimal.ZERO;
+
     private LocalDate createdDate = LocalDate.now();
 
     public Event() {
@@ -66,6 +70,26 @@ public class Event {
         this.currentRegisteredCount = 0;
         this.registrationDeadline = registrationDeadline;
         this.status = "UPCOMING";
+        this.registrationFee = BigDecimal.ZERO;
+        this.createdDate = LocalDate.now();
+    }
+
+    public Event(String eventName, String description, String category, LocalDate eventDate,
+                 String startTime, String endTime, String venue, String organizerName,
+                 Integer maxParticipants, LocalDate registrationDeadline, BigDecimal registrationFee) {
+        this.eventName = eventName;
+        this.description = description;
+        this.category = category;
+        this.eventDate = eventDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.venue = venue;
+        this.organizerName = organizerName;
+        this.maxParticipants = maxParticipants;
+        this.currentRegisteredCount = 0;
+        this.registrationDeadline = registrationDeadline;
+        this.status = "UPCOMING";
+        this.registrationFee = registrationFee != null ? registrationFee : BigDecimal.ZERO;
         this.createdDate = LocalDate.now();
     }
 
@@ -179,5 +203,13 @@ public class Event {
 
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public BigDecimal getRegistrationFee() {
+        return registrationFee;
+    }
+
+    public void setRegistrationFee(BigDecimal registrationFee) {
+        this.registrationFee = registrationFee != null ? registrationFee : BigDecimal.ZERO;
     }
 }

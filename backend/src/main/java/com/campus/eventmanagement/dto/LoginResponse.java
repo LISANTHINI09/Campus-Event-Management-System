@@ -8,6 +8,7 @@ public class LoginResponse {
     private String department;
     private String year;
     private String phoneNumber;
+    private String collegeName;
     private String message;
 
     public LoginResponse() {}
@@ -20,6 +21,18 @@ public class LoginResponse {
         this.department = department;
         this.year = year;
         this.phoneNumber = phoneNumber;
+        this.message = message;
+    }
+
+    public LoginResponse(Long id, String name, String email, String role, String department, String year, String phoneNumber, String collegeName, String message) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.department = department;
+        this.year = year;
+        this.phoneNumber = phoneNumber;
+        this.collegeName = collegeName;
         this.message = message;
     }
 
@@ -77,6 +90,14 @@ public class LoginResponse {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 
     public String getMessage() {

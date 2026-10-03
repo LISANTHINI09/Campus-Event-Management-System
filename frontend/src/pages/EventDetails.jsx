@@ -4,7 +4,7 @@ import { eventService } from '../services/eventService';
 import { registrationService } from '../services/registrationService';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
-import Modal from '../components/Modal';
+import RegistrationFlowModal from '../components/RegistrationFlowModal';
 import { 
   Calendar, 
   Clock, 
@@ -16,7 +16,8 @@ import {
   AlertCircle, 
   AlertTriangle,
   BookmarkCheck,
-  ShieldAlert
+  ShieldAlert,
+  CreditCard
 } from 'lucide-react';
 
 const EventDetails = () => {
@@ -150,6 +151,15 @@ const EventDetails = () => {
           <div className="details-header">
             <div className="details-badges">
               <span className="badge badge-category">{event.category}</span>
+              {Number(event.registrationFee) > 0 ? (
+                <span className="badge" style={{ background: '#e0e7ff', color: '#4338ca', fontWeight: 600 }}>
+                  Fee: ₹{event.registrationFee}
+                </span>
+              ) : (
+                <span className="badge" style={{ background: '#dcfce7', color: '#15803d', fontWeight: 600 }}>
+                  Fee: Free
+                </span>
+              )}
               <span className={`badge badge-${event.status?.toLowerCase()}`}>
                 {event.status}
               </span>
@@ -185,6 +195,16 @@ const EventDetails = () => {
               <div>
                 <span className="meta-card-label">Venue</span>
                 <span className="meta-card-value">{event.venue}</span>
+              </div>
+            </div>
+
+            <div className="meta-card">
+              <CreditCard size={20} className="meta-card-icon" />
+              <div>
+                <span className="meta-card-label">Registration Fee</span>
+                <span className="meta-card-value">
+                  {Number(event.registrationFee) > 0 ? `₹${event.registrationFee}` : 'Free'}
+                </span>
               </div>
             </div>
 
@@ -286,7 +306,7 @@ const EventDetails = () => {
                 onClick={handleRegisterClick}
                 className="btn btn-primary btn-lg full-width register-action-btn"
               >
-                Register for this Event
+                Register Now
               </button>
             )}
 
@@ -299,42 +319,17 @@ const EventDetails = () => {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
-      <Modal
+      {/* Multi-Step Participant Details & Demo Payment Registration Modal */}
+      <RegistrationFlowModal
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
-        title="Confirm Event Registration"
-        footer={
-          <>
-            <button
-              onClick={() => setShowConfirmModal(false)}
-              className="btn btn-secondary"
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleConfirmRegistration}
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Registering...' : 'Yes, Confirm My Slot'}
-            </button>
-          </>
-        }
-      >
-        <div className="modal-body-content">
-          <p>
-            Please confirm your registration for <strong>{event.eventName}</strong>.
-          </p>
-          <ul className="modal-details-list">
-            <li><strong>Date:</strong> {event.eventDate}</li>
-            <li><strong>Time:</strong> {event.startTime}</li>
-            <li><strong>Venue:</strong> {event.venue}</li>
-            <li><strong>Student:</strong> {currentUser?.name} ({currentUser?.department})</li>
-          </ul>
-        </div>
-      </Modal>
+        event={event}
+        currentUser={currentUser}
+        onSuccess={() => {
+          setIsRegistered(true);
+          fetchEventData();
+        }}
+      />
     </div>
   );
 };

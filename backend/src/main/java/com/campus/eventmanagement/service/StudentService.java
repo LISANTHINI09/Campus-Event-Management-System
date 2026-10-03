@@ -35,6 +35,7 @@ public class StudentService {
         student.setDepartment(dto.getDepartment());
         student.setYear(dto.getYear());
         student.setPhoneNumber(dto.getPhoneNumber().trim());
+        student.setCollegeName(dto.getCollegeName() != null ? dto.getCollegeName().trim() : null);
         student.setPassword(passwordEncoder.encode(dto.getPassword()));
         student.setRole("STUDENT");
 
@@ -59,6 +60,7 @@ public class StudentService {
                 student.getDepartment(),
                 student.getYear(),
                 student.getPhoneNumber(),
+                student.getCollegeName(),
                 "Login successful"
         );
     }
@@ -77,6 +79,9 @@ public class StudentService {
         student.setDepartment(dto.getDepartment());
         student.setYear(dto.getYear());
         student.setPhoneNumber(dto.getPhoneNumber().trim());
+        if (dto.getCollegeName() != null) {
+            student.setCollegeName(dto.getCollegeName().trim());
+        }
 
         if (dto.getPassword() != null && !dto.getPassword().trim().isEmpty()) {
             if (dto.getPassword().trim().length() < 6) {
@@ -104,7 +109,8 @@ public class StudentService {
                 student.getDepartment(),
                 student.getYear(),
                 student.getPhoneNumber(),
-                student.getRole()
+                student.getRole(),
+                student.getCollegeName()
         );
     }
 }

@@ -8,6 +8,7 @@ public class StudentResponseDto {
     private String year;
     private String phoneNumber;
     private String role;
+    private String collegeName;
 
     public StudentResponseDto() {}
 
@@ -19,6 +20,17 @@ public class StudentResponseDto {
         this.year = year;
         this.phoneNumber = phoneNumber;
         this.role = role;
+    }
+
+    public StudentResponseDto(Long id, String name, String email, String department, String year, String phoneNumber, String role, String collegeName) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.department = department;
+        this.year = year;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.collegeName = collegeName;
     }
 
     public Long getId() {
@@ -75,5 +87,13 @@ public class StudentResponseDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
     }
 }

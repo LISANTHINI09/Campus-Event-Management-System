@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
         department: response.department,
         year: response.year,
         phoneNumber: response.phoneNumber,
+        collegeName: response.collegeName || 'Campus Engineering College',
       };
       setCurrentUser(user);
       return user;

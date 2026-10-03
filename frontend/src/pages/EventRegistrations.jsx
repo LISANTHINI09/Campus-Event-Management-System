@@ -84,12 +84,19 @@ const EventRegistrations = () => {
   };
 
   const filtered = registrations.filter((r) => {
+    const term = search.toLowerCase();
     const matchesSearch =
       !search ||
-      r.studentName?.toLowerCase().includes(search.toLowerCase()) ||
-      r.studentEmail?.toLowerCase().includes(search.toLowerCase()) ||
-      r.studentDepartment?.toLowerCase().includes(search.toLowerCase()) ||
-      r.eventName?.toLowerCase().includes(search.toLowerCase());
+      r.fullName?.toLowerCase().includes(term) ||
+      r.studentName?.toLowerCase().includes(term) ||
+      r.email?.toLowerCase().includes(term) ||
+      r.studentEmail?.toLowerCase().includes(term) ||
+      r.rollNumber?.toLowerCase().includes(term) ||
+      r.collegeName?.toLowerCase().includes(term) ||
+      r.department?.toLowerCase().includes(term) ||
+      r.studentDepartment?.toLowerCase().includes(term) ||
+      r.paymentReference?.toLowerCase().includes(term) ||
+      r.eventName?.toLowerCase().includes(term);
 
     const matchesStatus = statusFilter === 'ALL' || r.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -188,9 +195,11 @@ const EventRegistrations = () => {
                 <thead>
                   <tr>
                     <th>Reg #</th>
-                    <th>Student Name</th>
-                    <th>Contact & Department</th>
+                    <th>Participant & Roll No</th>
+                    <th>Contact & College</th>
+                    <th>Department & Year</th>
                     <th>Event Enrolled</th>
+                    <th>Payment</th>
                     <th>Registered Date</th>
                     <th>Status</th>
                     <th>Update Attendance</th>
@@ -203,18 +212,32 @@ const EventRegistrations = () => {
                         <span className="text-muted">#{reg.id}</span>
                       </td>
                       <td>
-                        <strong>{reg.studentName}</strong>
-                        <p className="text-muted" style={{ fontSize: '0.82rem' }}>
-                          {reg.studentEmail}
-                        </p>
+                        <strong>{reg.fullName || reg.studentName}</strong>
+                        {reg.rollNumber && (
+                          <div style={{ marginTop: '3px' }}>
+                            <span className="badge badge-outline" style={{ fontSize: '0.75rem' }}>
+                              Roll: {reg.rollNumber}
+                            </span>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div style={{ fontSize: '0.85rem' }}>
-                          <span className="badge badge-category">{reg.studentDepartment}</span>{' '}
-                          <span className="text-muted">{reg.studentYear}</span>
-                          <div style={{ color: '#64748b', marginTop: '2px' }}>
-                            Ph: {reg.studentPhone}
+                          <div>{reg.email || reg.studentEmail}</div>
+                          <div style={{ color: '#64748b' }}>
+                            Ph: {reg.phoneNumber || reg.studentPhone}
                           </div>
+                          {reg.collegeName && (
+                            <div className="text-muted" style={{ fontSize: '0.8rem', marginTop: '2px' }}>
+                              {reg.collegeName}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <div style={{ fontSize: '0.85rem' }}>
+                          <span className="badge badge-category">{reg.department || reg.studentDepartment}</span>{' '}
+                          <span className="text-muted">{reg.year || reg.studentYear}</span>
                         </div>
                       </td>
                       <td>
@@ -224,6 +247,29 @@ const EventRegistrations = () => {
                         <p className="text-muted" style={{ fontSize: '0.82rem' }}>
                           {reg.eventDate} ({reg.eventStartTime})
                         </p>
+                      </td>
+                      <td>
+                        {reg.paymentStatus === 'PAID' ? (
+                          <div>
+                            <span className="badge badge-paid">PAID</span>
+                            {reg.paymentReference && (
+                              <div
+                                style={{
+                                  fontSize: '0.75rem',
+                                  fontFamily: 'monospace',
+                                  color: '#166534',
+                                  marginTop: '2px',
+                                }}
+                              >
+                                {reg.paymentReference}
+                              </div>
+                            )}
+                          </div>
+                        ) : reg.paymentStatus === 'NOT_REQUIRED' ? (
+                          <span className="badge badge-free">Free (Not Required)</span>
+                        ) : (
+                          <span className="badge badge-secondary">{reg.paymentStatus || 'Free'}</span>
+                        )}
                       </td>
                       <td>
                         <span style={{ fontSize: '0.85rem' }}>

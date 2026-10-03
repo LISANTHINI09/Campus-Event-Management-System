@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, Key, Mail, AlertCircle, ShieldCheck, UserCheck } from 'lucide-react';
+import { LogIn, Key, Mail, AlertCircle, CheckCircle2, ShieldCheck, UserCheck } from 'lucide-react';
 
 const Login = () => {
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [infoMessage, setInfoMessage] = useState(location.state?.successMessage || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -54,6 +55,13 @@ const Login = () => {
           <h2>Welcome Back</h2>
           <p className="text-muted">Sign in to your Campus Event account</p>
         </div>
+
+        {infoMessage && (
+          <div className="alert alert-success">
+            <CheckCircle2 size={18} />
+            <span>{infoMessage}</span>
+          </div>
+        )}
 
         {error && (
           <div className="alert alert-danger">

@@ -33,7 +33,18 @@ const EventCard = ({ event, onQuickRegister, isRegistered }) => {
   return (
     <div className="card event-card">
       <div className="event-card-header">
-        <span className="badge badge-category">{event.category}</span>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <span className="badge badge-category">{event.category}</span>
+          {Number(event.registrationFee) > 0 ? (
+            <span className="badge" style={{ background: '#e0e7ff', color: '#4338ca', fontWeight: 600 }}>
+              ₹{event.registrationFee}
+            </span>
+          ) : (
+            <span className="badge" style={{ background: '#dcfce7', color: '#15803d', fontWeight: 600 }}>
+              Free
+            </span>
+          )}
+        </div>
         {getStatusBadge(event.status)}
       </div>
 

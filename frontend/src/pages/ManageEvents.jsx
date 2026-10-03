@@ -188,6 +188,7 @@ const ManageEvents = () => {
                   <tr>
                     <th>Event Details</th>
                     <th>Category</th>
+                    <th>Fee</th>
                     <th>Date & Time</th>
                     <th>Venue</th>
                     <th>Capacity</th>
@@ -207,6 +208,13 @@ const ManageEvents = () => {
                       </td>
                       <td>
                         <span className="badge badge-category">{e.category}</span>
+                      </td>
+                      <td>
+                        {(!e.registrationFee || Number(e.registrationFee) === 0) ? (
+                          <span className="badge badge-free">Free</span>
+                        ) : (
+                          <span className="badge badge-paid">₹{e.registrationFee}</span>
+                        )}
                       </td>
                       <td>
                         <div style={{ fontSize: '0.85rem' }}>
